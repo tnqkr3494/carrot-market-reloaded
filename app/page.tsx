@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <main className="bg-gray-100 h-screen flex justify-center items-center p-8 capitalize">
-      <div className="bg-white w-full rounded-md p-6 max-w-screen-sm shadow-lg flex flex-col">
+      <div className="bg-white w-full rounded-lg p-6 max-w-screen-sm shadow-lg flex flex-col has-[:invalid]:bg-red-300">
         <input
           type="email"
           placeholder="Email"
