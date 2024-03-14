@@ -10,7 +10,8 @@ export default function Home() {
             <div className="size-7 bg-cyan-500 rounded-full" />
             <span>{person}</span>
             <div className="size-6 bg-red-500 flex items-center justify-center rounded-full text-white text-sm">
-              <span>{index}</span>
+              <span className="z-10">{index}</span>
+              <div className="size-6 bg-red-500 rounded-full absolute animate-ping" />
             </div>
           </div>
         ))}
