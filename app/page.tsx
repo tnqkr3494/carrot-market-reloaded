@@ -10,7 +10,7 @@ export default function Home() {
           <div className="w-10 h-10 bg-orange-400 rounded-full" />
         </div>
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-white bg-green-400 px-2.5 py-1 rounded-xl">
+          <span className="text-white bg-green-400 px-2.5 py-1 rounded-xl hover:bg-green-600 transition hover:scale-110">
             Today
           </span>
           <span>9:30-10:30u</span>
