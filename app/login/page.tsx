@@ -9,10 +9,9 @@ export default function Home() {
     <div className="py-8 px-6 gap-10 flex flex-col">
       <div className="font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
-        <h2 className="mt-3">Fill in the form below to join!</h2>
+        <h2 className="mt-3">Log in with email and password</h2>
       </div>
       <form className="flex flex-col gap-3">
-        <FormInput type="text" required placeholder="Username" errors={[]} />
         <FormInput type="email" required placeholder="Email" errors={[]} />
         <FormInput
           type="password"
@@ -20,13 +19,7 @@ export default function Home() {
           placeholder="Password"
           errors={[]}
         />
-        <FormInput
-          type="password"
-          required
-          placeholder="Confirm Password"
-          errors={[]}
-        />
-        <FormButton loading={false} text="Create account" />
+        <FormButton loading={false} text="Login" />
       </form>
       <SocialLogin />
     </div>
