@@ -1,8 +1,6 @@
 import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
-import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 
 export default function Home() {
   return (
@@ -12,15 +10,29 @@ export default function Home() {
         <h2 className="mt-3">Fill in the form below to join!</h2>
       </div>
       <form className="flex flex-col gap-3">
-        <FormInput type="text" required placeholder="Username" errors={[]} />
-        <FormInput type="email" required placeholder="Email" errors={[]} />
         <FormInput
+          name="username"
+          type="text"
+          required
+          placeholder="Username"
+          errors={[]}
+        />
+        <FormInput
+          name="email"
+          type="email"
+          required
+          placeholder="Email"
+          errors={[]}
+        />
+        <FormInput
+          name="password"
           type="password"
           required
           placeholder="Password"
           errors={[]}
         />
         <FormInput
+          name="confirm"
           type="password"
           required
           placeholder="Confirm Password"
