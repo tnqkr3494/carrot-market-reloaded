@@ -24,6 +24,8 @@ const formSchema = z
       })
       .min(5, "Too Short")
       .max(10, "Too Long")
+      .toLowerCase()
+      .transform((username) => `${username}❤️`)
       .refine(checkUsername, "no kang"),
     email: z.string().email(),
     password: z.string().min(10),
