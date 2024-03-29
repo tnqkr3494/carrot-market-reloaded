@@ -1,12 +1,38 @@
 "use server";
 import { z } from "zod";
 
-const formSchema = z.object({
-  username: z.string().min(5).max(10),
-  email: z.string().email(),
-  password: z.string().min(10),
-  confirm: z.string().min(10),
-});
+const checkUsername = (username: string) => {
+  return !username.includes("kang");
+};
+
+const checkPassword = ({
+  password,
+  confirm,
+}: {
+  password: string;
+  confirm: string;
+}) => {
+  return password === confirm;
+};
+
+const formSchema = z
+  .object({
+    username: z
+      .string({
+        invalid_type_error: "User name must be string",
+        required_error: "User name is required",
+      })
+      .min(5, "Too Short")
+      .max(10, "Too Long")
+      .refine(checkUsername, "no kang"),
+    email: z.string().email(),
+    password: z.string().min(10),
+    confirm: z.string().min(10),
+  })
+  .refine(checkPassword, {
+    message: "Both Passwords should be the same!",
+    path: ["confirm"],
+  });
 
 export default async function createAccount(
   prevState: any,
