@@ -1,4 +1,9 @@
 "use server";
+import {
+  PASSWORD_ERROR,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+} from "@/lib/constants";
 import { z } from "zod";
 
 const checkUsername = (username: string) => {
@@ -27,19 +32,19 @@ const formSchema = z
       .toLowerCase()
       .transform((username) => `${username}❤️`)
       .refine(checkUsername, "no kang"),
-    email: z.string().email(),
-    password: z.string().min(10),
-    confirm: z.string().min(10),
+    email: z.string().email().toLowerCase(),
+    password: z
+      .string()
+      .min(PASSWORD_MIN_LENGTH)
+      .regex(PASSWORD_REGEX, PASSWORD_ERROR),
+    confirm: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .refine(checkPassword, {
     message: "Both Passwords should be the same!",
     path: ["confirm"],
   });
 
-export default async function createAccount(
-  prevState: any,
-  formData: FormData
-) {
+export async function createAccount(prevState: any, formData: FormData) {
   const data = {
     username: formData.get("username"),
     email: formData.get("email"),

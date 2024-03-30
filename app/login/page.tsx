@@ -4,10 +4,10 @@ import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
 import { useFormState } from "react-dom";
-import { handleForm } from "./action";
+import { login } from "./action";
 
 export default function Home() {
-  const [state, action] = useFormState(handleForm, null);
+  const [state, action] = useFormState(login, null);
 
   return (
     <div className="py-8 px-6 gap-10 flex flex-col">
@@ -21,14 +21,14 @@ export default function Home() {
           type="email"
           required
           placeholder="Email"
-          errors={[]}
+          errors={state?.fieldErrors.email}
         />
         <FormInput
           name="password"
           type="password"
           required
           placeholder="Password"
-          errors={state?.error ?? []}
+          errors={state?.fieldErrors.password}
         />
         <FormButton loading={false} text="Login" />
       </form>

@@ -11,18 +11,8 @@ export default function Home() {
         <h2 className="mt-3">Verify your phone number</h2>
       </div>
       <form className="flex flex-col gap-3">
-        <FormInput
-          type="number"
-          required
-          placeholder="Phone number"
-          errors={[]}
-        />
-        <FormInput
-          type="number"
-          required
-          placeholder="Verification code"
-          errors={[]}
-        />
+        <FormInput type="number" required placeholder="Phone number" />
+        <FormInput type="number" required placeholder="Verification code" />
         <FormButton loading={false} text="Verify" />
       </form>
     </div>
