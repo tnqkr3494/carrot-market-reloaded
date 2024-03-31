@@ -9,6 +9,8 @@ import {
 } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
 
 const checkUsername = (username: string) => {
   return !username.includes("kang");
@@ -98,6 +100,14 @@ export async function createAccount(prevState: any, formData: FormData) {
         id: true,
       },
     });
-    console.log(user);
+
+    const cookie = await getIronSession(cookies(), {
+      cookieName: "carrot",
+      password: process.env.COOKIE_PASSWORD!,
+    });
+
+    //@ts-ignore
+    cookie.id = user.id;
+    await cookie.save();
   }
 }
