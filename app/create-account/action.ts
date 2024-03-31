@@ -28,30 +28,6 @@ const checkPassword = ({
   return password === confirm;
 };
 
-const checkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
-const checkUniqueEmail = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
 const formSchema = z
   .object({
     username: z
@@ -63,16 +39,51 @@ const formSchema = z
       .max(10, "Too Long")
       .toLowerCase()
       //.transform((username) => `${username}❤️`)
-      .refine(checkUsername, "no kang")
-      .refine(checkUniqueUsername, "This username is already taken"),
-    email: z
-      .string()
-      .email()
-      .toLowerCase()
-      .refine(checkUniqueEmail, "This email is already taken"),
+      .refine(checkUsername, "no kang"),
+    email: z.string().email().toLowerCase(),
     password: z.string().min(PASSWORD_MIN_LENGTH),
     //.regex(PASSWORD_REGEX, PASSWORD_ERROR),
     confirm: z.string().min(PASSWORD_MIN_LENGTH),
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        username: true,
+      },
+    });
+    //이미 존재하는 username이면
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "This username is already taken",
+        path: ["username"],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        username: true,
+      },
+    });
+    //이미 존재하는 email이면
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "This email is already taken",
+        path: ["email"],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
   })
   .refine(checkPassword, {
     message: "Both Passwords should be the same!",
