@@ -45,6 +45,7 @@ const formSchema = z
     //.regex(PASSWORD_REGEX, PASSWORD_ERROR),
     confirm: z.string().min(PASSWORD_MIN_LENGTH),
   })
+  //superRefine : 다른 아래 refine코드들을 동작시키지 않게 할 수 있다.(데이터베이스 여러번 호출 방지)
   .superRefine(async ({ username }, ctx) => {
     const user = await db.user.findUnique({
       where: {
@@ -97,6 +98,7 @@ export async function createAccount(prevState: any, formData: FormData) {
     password: formData.get("password"),
     confirm: formData.get("confirm"),
   };
+  //safeParseAsync : If you use asynchronous refinements or transforms (more on those later), you'll need to use -zod 공식문서
   const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     return result.error.flatten();

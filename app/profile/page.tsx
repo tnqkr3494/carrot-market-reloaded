@@ -28,6 +28,7 @@ export default async function Profile() {
   return (
     <div>
       <h1>Welcome! {user?.username}</h1>
+      {/* onclick사용안하고 trick으로 사용하는 방법 */}
       <form action={logOut}>
         <button>Log out</button>
       </form>
