@@ -7,7 +7,7 @@ export default function SocialLogin() {
       <div className="w-full bg-neutral-500 h-px" />
       <div className="flex flex-col gap-3">
         <Link
-          href="/sms"
+          href="/github/start"
           className="primary-btn w-full flex justify-center items-center gap-3 h-10"
         >
           <svg
