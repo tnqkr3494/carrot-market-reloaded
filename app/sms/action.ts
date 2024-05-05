@@ -105,7 +105,7 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         return {
           token: true,
           error: {
-            formErrors: ["hello"],
+            formErrors: ["Invalid Token Code"],
           },
         };
       } else {
