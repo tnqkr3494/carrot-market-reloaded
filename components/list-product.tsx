@@ -25,7 +25,13 @@ export default function ListProducts({
             <span className="text-white">No img</span>
           </div>
         ) : (
-          <Image fill src={photo} alt={title} quality={100} />
+          <Image
+            fill
+            src={photo}
+            alt={title}
+            quality={100}
+            className="object-cover"
+          />
         )}
       </div>
       <div className="flex flex-col gap-1 *:text-white">
