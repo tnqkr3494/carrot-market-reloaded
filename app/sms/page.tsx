@@ -16,7 +16,9 @@ export default function Home() {
     <div className="py-8 px-6 gap-10 flex flex-col">
       <div className="font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
-        <h2 className="mt-3">Verify your phone number</h2>
+        <h2 className="mt-3">
+          {state.token ? "Verify your Token Code" : "Verify your phone number"}
+        </h2>
       </div>
       <form action={action} className="flex flex-col gap-3">
         {state.token ? (

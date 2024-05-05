@@ -6,7 +6,9 @@ import { NextRequest } from "next/server";
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
   if (!code) {
-    return notFound();
+    return new Response(null, {
+      status: 400,
+    });
   }
   const params = new URLSearchParams({
     client_id: process.env.GITHUB_CLIENT_ID!,
@@ -36,7 +38,12 @@ export async function GET(req: NextRequest) {
       cache: "no-cache",
     })
   ).json();
-
+  /* 
+  no-cache 사용 이유 : nextjs14버전에서 fetch하면 그 값을 자동으로 캐싱한다.
+  캐싱한 데이터는 서버를 다시 껐다가 키지 않는한 계속 캐싱상태가 유지된다.
+  하지만 우리가 원하는 것은 최신의 user data를 얻어오고 싶은것이다. 
+  따라서 캐싱을 취소하는 의미로 코드를 사용함.
+  */
   const user = await db.user.findUnique({
     where: {
       github_id: String(id),
