@@ -1,10 +1,11 @@
 "use server";
 
 import crypto from "crypto";
-import { z } from "zod";
+import { ZodError, ZodIssueCode, z } from "zod";
 import validator from "validator";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import getSession from "@/lib/session";
 
 const phoneSchema = z
   .string()
@@ -53,6 +54,13 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
     }
     // 번호를 잘 입력하면 토큰화면 보여주기
     else {
+      await db.sMSToken.deleteMany({
+        where: {
+          user: {
+            phone: result.data,
+          },
+        },
+      });
       const token = await getToken();
       await db.sMSToken.create({
         data: {
@@ -84,7 +92,35 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         error: result.error.flatten(),
       };
     } else {
-      redirect("/");
+      const token = await db.sMSToken.findUnique({
+        where: {
+          token: result.data.toString(),
+        },
+        select: {
+          id: true,
+          userId: true,
+        },
+      });
+      if (!token) {
+        return {
+          token: true,
+          error: {
+            formErrors: ["hello"],
+          },
+        };
+      } else {
+        const session = await getSession();
+        session.id = token.userId;
+        await session.save();
+        await db.sMSToken.deleteMany({
+          where: {
+            user: {
+              id: token.userId,
+            },
+          },
+        });
+        redirect("/profile");
+      }
     }
   }
 }
