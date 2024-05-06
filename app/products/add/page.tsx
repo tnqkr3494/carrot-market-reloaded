@@ -32,13 +32,11 @@ export default function AddProduct() {
           {preview === "" ? (
             <>
               <PhotoIcon className="w-20" />
-              <span>
-                사진을 추가해주세요.
-                {state?.fieldErrors.photo}
-              </span>
+              <span>사진을 추가해주세요.</span>
             </>
           ) : null}
         </label>
+        {state?.fieldErrors.photo}
         <input
           onChange={onImageChange}
           type="file"

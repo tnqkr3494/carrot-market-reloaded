@@ -7,7 +7,8 @@ import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const productSchema = z.object({
-  photo: z.string().min(1, { message: "Photo is required" }),
+  //photo problem(/undefined)
+  photo: z.string(),
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   price: z.coerce.number().min(1, { message: "Price is required" }),
@@ -20,10 +21,45 @@ export async function uploadProduct(_: any, formData: FormData) {
     price: formData.get("price"),
     description: formData.get("description"),
   };
+
   if (data.photo instanceof File) {
-    const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    data.photo = `/${data.photo.name}`;
+    if (data.photo.type.startsWith("image/")) {
+      if (data.photo.size > 3145728) {
+        return {
+          fieldErrors: {
+            photo: "Please upload image file less then 3MB size",
+            title: [""],
+            price: [""],
+            description: [""],
+          },
+        };
+      } else if (data.photo.size > 0 && data.photo.size <= 3145728) {
+        const photoData = await data.photo.arrayBuffer();
+        await fs.appendFile(
+          `./public/${data.photo.name}`,
+          Buffer.from(photoData)
+        );
+        data.photo = `/${data.photo.name}`;
+      } else {
+        return {
+          fieldErrors: {
+            photo: ["Photo is required"],
+            title: [""],
+            price: [""],
+            description: [""],
+          },
+        };
+      }
+    } else {
+      return {
+        fieldErrors: {
+          photo: ["Please upload image file"],
+          title: [""],
+          price: [""],
+          description: [""],
+        },
+      };
+    }
   }
   const result = await productSchema.safeParseAsync(data);
 
@@ -37,7 +73,7 @@ export async function uploadProduct(_: any, formData: FormData) {
           title: result.data.title,
           description: result.data.description,
           price: result.data.price,
-          photo: result.data.photo,
+          photo: result.data.photo as any,
           user: {
             connect: {
               id: session.id,
