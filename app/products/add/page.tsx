@@ -44,7 +44,12 @@ export default function AddProduct() {
         />
         <FormInput name="title" required placeholder="제목" type="text" />
         <FormInput name="price" type="number" required placeholder="가격" />
-        <FormInput name="description" type="text" placeholder="자세한 설명" />
+        <FormInput
+          name="description"
+          type="text"
+          required
+          placeholder="자세한 설명"
+        />
         <FormButton text="작성 완료" />
       </form>
     </div>
