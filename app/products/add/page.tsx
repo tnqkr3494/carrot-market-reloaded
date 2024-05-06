@@ -4,18 +4,35 @@ import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { uploadProduct } from "./action";
 
 export default function AddProduct() {
   const [preview, setPreview] = useState("");
-  const onImageChange = () => {};
+  const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { files },
+    } = e;
+    if (!files) {
+      return;
+    }
+    const file = files[0];
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+  };
   return (
     <div>
-      <form className="p-5 flex flex-col gap-5">
+      <form action={uploadProduct} className="p-5 flex flex-col gap-5">
         <label
           htmlFor="photo"
-          className="aspect-square border-2 flex items-center justify-center border-dashed"
+          className="aspect-square border-2 flex flex-col items-center justify-center border-dashed "
+          style={{ background: `url(${preview})` }}
         >
-          <PhotoIcon className="w-20" />
+          {preview === "" ? (
+            <>
+              <PhotoIcon className="w-20" />
+              <span>사진을 추가해주세요.</span>
+            </>
+          ) : null}
         </label>
         <input
           onChange={onImageChange}
