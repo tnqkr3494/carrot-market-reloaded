@@ -2,26 +2,18 @@
 
 import { z } from "zod";
 import fs from "fs/promises";
-import getSession from "@/lib/session";
 import db from "@/lib/db";
+import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const productSchema = z.object({
-  photo: z.string({
-    required_error: "Photo is required",
-  }),
-  title: z.string({
-    required_error: "Title is required",
-  }),
-  price: z.coerce.number({
-    required_error: "Price is required",
-  }),
-  description: z.string({
-    required_error: "Description is required",
-  }),
+  photo: z.string().min(1, { message: "Photo is required" }),
+  title: z.string().min(1, { message: "Title is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  price: z.coerce.number().min(1, { message: "Price is required" }),
 });
 
-export async function uploadProduct(formData: FormData) {
+export async function uploadProduct(_: any, formData: FormData) {
   const data = {
     photo: formData.get("photo"),
     title: formData.get("title"),
@@ -33,7 +25,8 @@ export async function uploadProduct(formData: FormData) {
     await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
     data.photo = `/${data.photo.name}`;
   }
-  const result = productSchema.safeParse(data);
+  const result = await productSchema.safeParseAsync(data);
+
   if (!result.success) {
     return result.error.flatten();
   } else {
@@ -42,8 +35,8 @@ export async function uploadProduct(formData: FormData) {
       const product = await db.product.create({
         data: {
           title: result.data.title,
-          price: result.data.price,
           description: result.data.description,
+          price: result.data.price,
           photo: result.data.photo,
           user: {
             connect: {
@@ -56,6 +49,7 @@ export async function uploadProduct(formData: FormData) {
         },
       });
       redirect(`/products/${product.id}`);
+      //redirect("/products")
     }
   }
 }

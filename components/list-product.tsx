@@ -7,7 +7,7 @@ interface ListProductsProps {
   title: string;
   price: number;
   created_at: Date;
-  photo?: string | null;
+  photo: string;
 }
 
 export default function ListProducts({
