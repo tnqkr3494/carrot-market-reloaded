@@ -35,6 +35,7 @@ export async function uploadProduct(_: any, formData: FormData) {
         };
       } else if (data.photo.size > 0 && data.photo.size <= 3145728) {
         const photoData = await data.photo.arrayBuffer();
+        // fs 경로 : 이 파일 기준이 아니라 전체 폴더 기준(최상위 루트)
         await fs.appendFile(
           `./public/${data.photo.name}`,
           Buffer.from(photoData)
