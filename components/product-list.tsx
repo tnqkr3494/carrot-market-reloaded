@@ -48,14 +48,15 @@ export default function ProductList({ initialProducts }: ProductListProps) {
       {products.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
-      {!isLastPage ? (
+      {/* cache기능 확인하기 위해 잠시 주석처리
+       {!isLastPage ? (
         <span
           ref={trigger}
           className="text-sm font-semibold bg-orange-500 w-fit mx-auto px-3 py-2 rounded-md hover:opacity-90 active:scale-95"
         >
           {isLoading ? "로딩 중" : "Load more"}
         </span>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }
