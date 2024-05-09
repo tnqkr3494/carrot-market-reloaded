@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
+import { revalidateTag, unstable_cache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,6 +16,8 @@ async function getOwner(userId: number) {
 }
 
 async function getProduct(id: number) {
+  console.log("product-detail");
+
   const product = await db.product.findUnique({
     where: {
       id,
@@ -31,6 +34,37 @@ async function getProduct(id: number) {
   return product;
 }
 
+const getCachedProduct = unstable_cache(getProduct, ["product-detail"], {
+  tags: ["product-detail"],
+});
+
+async function getProductTitle(id: number) {
+  console.log("product-title");
+
+  const product = await db.product.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      title: true,
+    },
+  });
+  return product;
+}
+
+const getCachedProductTitle = unstable_cache(
+  getProductTitle,
+  ["product-title"],
+  { tags: ["product-title"] }
+);
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const product = await getCachedProductTitle(Number(params.id));
+  return {
+    title: product?.title,
+  };
+}
+
 export default async function ProductDetail({
   params,
 }: {
@@ -42,11 +76,15 @@ export default async function ProductDetail({
     return notFound();
   }
 
-  const product = await getProduct(id);
+  const product = await getCachedProduct(id);
   if (!product) {
     return notFound();
   }
   const isOwner = await getOwner(product.userId);
+  const revalidate = async () => {
+    "use server";
+    revalidateTag("product-title");
+  };
 
   return (
     <div>
@@ -89,9 +127,11 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
         {isOwner ? (
-          <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
-            Delete product
-          </button>
+          <form action={revalidate}>
+            <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
+              Delete product
+            </button>
+          </form>
         ) : null}
         <Link
           className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
