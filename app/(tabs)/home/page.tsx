@@ -6,7 +6,12 @@ import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
 
-const getCachedProducts = unstable_cache(getInitialProducts, ["home-products"]);
+const getCachedProducts = unstable_cache(
+  getInitialProducts,
+  ["home-products"],
+  // revalidate : 60초마다 실행되는 것이 아니라 이 함수를 최초 실행한지 60초 지난 후 또 실행되면 그때 cache를 새로 변경
+  { revalidate: 60 }
+);
 
 async function getInitialProducts() {
   console.log("hi");
