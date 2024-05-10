@@ -8,10 +8,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function getOwner(userId: number) {
-  const session = await getSession();
-  if (session.id) {
-    return session.id === userId;
-  }
+  // 쿠키를 사용하면 dynamic page
+  // const session = await getSession();
+  // if (session.id) {
+  //   return session.id === userId;
+  // }
   return false;
 }
 
@@ -142,4 +143,20 @@ export default async function ProductDetail({
       </div>
     </div>
   );
+}
+
+// 동적으로 할당되는 id를 미리 서버에서 불러와서 뿌려줌. dynamic -> static
+// 하지만 많은 product가 있으면 사이트 빌드시 데이터베이스 폭파 가능성
+
+export async function generateStaticParams() {
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return products.map((product) => {
+    return {
+      id: String(product.id),
+    };
+  });
 }
