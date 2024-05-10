@@ -88,7 +88,7 @@ export default async function ProductDetail({
   };
 
   return (
-    <div>
+    <div className="pb-60">
       <div className="relative aspect-square">
         {product.photo ? (
           <Image
@@ -96,7 +96,7 @@ export default async function ProductDetail({
             src={product.photo}
             alt={product.title}
             quality={100}
-            className="object-cover"
+            className="object-cover size-[500px]"
           />
         ) : (
           <div className="aspect-square bg-white" />
@@ -123,7 +123,7 @@ export default async function ProductDetail({
         <h1 className="text-2xl font-semibold">{product.title}</h1>
         <p>{product.description}</p>
       </div>
-      <div className="fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-between items-center">
+      <div className="fixed w-full max-w-screen-md bottom-0 p-5 pb-10 bg-neutral-800 flex justify-between items-center">
         <span className="font-semibold text-xl">
           {formatToWon(product.price)}원
         </span>
