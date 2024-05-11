@@ -61,6 +61,9 @@ async function getLikeStatus(postId: number) {
     isLiked: Boolean(isLiked),
   };
 }
+
+// getLikeStatus인자로 자동으로 postId보내줌
+// 하지만 return할때는 안보내주기 때문에 직접 지정함.
 function getCachedLikeStatus(postId: number) {
   const cachedOperation = unstable_cache(
     getLikeStatus,
