@@ -23,13 +23,17 @@ async function getPosts() {
   return posts;
 }
 
+export const metadata = {
+  title: "동네생활",
+};
+
 export default async function Life() {
   const posts = await getPosts();
   return (
     <div className="flex flex-col p-5 gap-5">
       {posts.map((post) => (
         <Link
-          href={`/post/${post.id}`}
+          href={`/posts/${post.id}`}
           key={post.id}
           className="flex flex-col gap-2 border-b-2 pb-5 last:border-b-0 last:pb-0 text-neutral-400"
         >
