@@ -90,7 +90,7 @@ model ChatRoom {
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
-  Message    Message[]
+  messages   Message[]
 }
 
 model Message {
