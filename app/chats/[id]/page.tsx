@@ -62,6 +62,10 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
   const initialMessages = await getMessages(room.id);
 
   return (
-    <ChatMessagesList initialMessages={initialMessages} userId={session.id!} />
+    <ChatMessagesList
+      initialMessages={initialMessages}
+      userId={session.id!}
+      chatRoomId={params.id}
+    />
   );
 }
