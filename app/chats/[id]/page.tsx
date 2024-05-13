@@ -54,14 +54,12 @@ export type InitialChatMessages = Prisma.PromiseReturnType<typeof getMessages>;
 
 export default async function ChatRoom({ params }: { params: { id: string } }) {
   const room = await getRoom(params.id);
+
   const session = await getSession();
   if (!room) {
     return notFound();
   }
   const initialMessages = await getMessages(room.id);
-  console.log(room.id);
-
-  console.log(initialMessages);
 
   return (
     <ChatMessagesList initialMessages={initialMessages} userId={session.id!} />

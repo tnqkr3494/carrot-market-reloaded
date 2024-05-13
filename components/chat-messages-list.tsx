@@ -36,14 +36,16 @@ export default function ChatMessagesList({
             message.userId === userId ? "justify-end" : ""
           }`}
         >
-          {message.userId === userId ? null : (
+          {message.userId === userId ? null : message.user.avatar ? (
             <Image
-              src={message.user.avatar!}
+              src={message.user.avatar}
               alt={message.user.username}
               width={50}
               height={50}
               className="size-8 rounded-full"
             />
+          ) : (
+            <div className="size-8 bg-slate-200 rounded-full"></div>
           )}
           <div
             className={`flex flex-col gap-1 ${
