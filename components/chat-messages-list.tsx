@@ -11,18 +11,24 @@ interface IChatMessagesList {
   initialMessages: InitialChatMessages;
   userId: number;
   chatRoomId: string;
+  username: string;
+  avatar: string;
 }
 
 export default function ChatMessagesList({
   initialMessages,
   userId,
   chatRoomId,
+  username,
+  avatar,
 }: IChatMessagesList) {
   const [messages, setMessages] = useState(initialMessages);
   const [message, setMessage] = useState("");
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
+
+  // 컴포넌트 내에 다양한 함수에서 쓰이는 값을 저장할 때는 useRef를 사용하면 좋다.
   const channel = useRef<RealtimeChannel>();
 
   const onSubmit = (e: React.FormEvent) => {
@@ -35,15 +41,21 @@ export default function ChatMessagesList({
         created_at: new Date(),
         userId,
         user: {
-          username: "anonymouse",
-          avatar: "xxx",
+          username,
+          avatar,
         },
       },
     ]);
     channel.current?.send({
       type: "broadcast",
       event: "message",
-      payload: { message },
+      payload: message,
+      created_at: new Date(),
+      userId,
+      user: {
+        username,
+        avatar,
+      },
     });
     setMessage("");
   };
@@ -56,7 +68,7 @@ export default function ChatMessagesList({
     channel.current = client.channel(`room-${chatRoomId}`);
     channel.current
       .on("broadcast", { event: "message" }, (payload) => {
-        console.log(payload);
+        setMessages((prev) => [...prev, payload.paylod]);
       })
       .subscribe();
 
