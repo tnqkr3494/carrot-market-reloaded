@@ -1,6 +1,7 @@
 "use client";
 
 import { InitialChatMessages } from "@/app/chats/[id]/page";
+import { saveMessage } from "@/app/chats/action";
 import { formatToTimeAgo } from "@/lib/utils";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { RealtimeChannel, createClient } from "@supabase/supabase-js";
@@ -31,7 +32,7 @@ export default function ChatMessagesList({
   // 컴포넌트 내에 다양한 함수에서 쓰이는 값을 저장할 때는 useRef를 사용하면 좋다.
   const channel = useRef<RealtimeChannel>();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessages((prev) => [
       ...prev,
@@ -60,6 +61,7 @@ export default function ChatMessagesList({
         },
       },
     });
+    await saveMessage(message, chatRoomId);
     setMessage("");
   };
 
@@ -95,7 +97,7 @@ export default function ChatMessagesList({
               alt={message.user.username}
               width={50}
               height={50}
-              className="size-8 rounded-full"
+              className="size-8 rounded-full object-cover object-center"
             />
           ) : (
             <div className="size-8 bg-slate-200 rounded-full"></div>
