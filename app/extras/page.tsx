@@ -1,9 +1,11 @@
 import HackedComponent from "@/components/hacked-component";
 import { revalidatePath } from "next/cache";
+import Image from "next/image";
 import {
   experimental_taintObjectReference,
   experimental_taintUniqueValue,
 } from "react";
+import woman from "../../public/woman.jpeg";
 
 async function getData() {
   const data = await fetch(
@@ -35,12 +37,13 @@ export default async function Extras() {
 
   return (
     <div className="flex flex-col gap-3 py-10">
-      <h1 className="text-6xl font-metallica">Extras!</h1>
-      <h2 className="font-roboto">So much more to learn!</h2>
-      <HackedComponent data={data} />
-      <form action={action}>
-        <button>revalidate</button>
-      </form>
+      {/* local src로 경로설정해야 width, height없이 blur사용이 가능해진다. */}
+      <Image
+        src="/woman.jpeg"
+        alt=""
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+      />
     </div>
   );
 }
