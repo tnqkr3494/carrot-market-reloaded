@@ -49,12 +49,15 @@ export default function ChatMessagesList({
     channel.current?.send({
       type: "broadcast",
       event: "message",
-      payload: message,
-      created_at: new Date(),
-      userId,
-      user: {
-        username,
-        avatar,
+      payload: {
+        id: Date.now(),
+        payload: message,
+        created_at: new Date(),
+        userId,
+        user: {
+          username,
+          avatar,
+        },
       },
     });
     setMessage("");
@@ -68,7 +71,7 @@ export default function ChatMessagesList({
     channel.current = client.channel(`room-${chatRoomId}`);
     channel.current
       .on("broadcast", { event: "message" }, (payload) => {
-        setMessages((prev) => [...prev, payload.paylod]);
+        setMessages((prev) => [...prev, payload.payload]);
       })
       .subscribe();
 
