@@ -58,7 +58,13 @@ export default async function Chat() {
             href={`/chats/${chatRoom.id}`}
             className="text-white text-2xl font-semibold border-b-2 pb-5"
           >
-            <span>{chatRoom.users[1].username}과의 </span>
+            <span>
+              {
+                chatRoom.users.filter((user) => user.id !== session.id)[0]
+                  .username
+              }
+              과의{" "}
+            </span>
             <span>채팅방 {idx + 1}</span>
           </Link>
         ))}
